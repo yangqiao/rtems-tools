@@ -1,0 +1,73 @@
+diff -ruN t1lib-5.1.2/configure t1lib-5.1.2-new/configure
+--- t1lib-5.1.2/configure	2007-12-23 16:49:43.000000000 +0100
++++ t1lib-5.1.2-new/configure	2015-08-14 10:32:37.985381959 +0200
+@@ -24758,11 +24758,7 @@
+   echo $ECHO_N "(cached) $ECHO_C" >&6
+ else
+   if test "$cross_compiling" = yes; then
+-  { { echo "$as_me:$LINENO: error: cannot run test program while cross compiling
+-See \`config.log' for more details." >&5
+-echo "$as_me: error: cannot run test program while cross compiling
+-See \`config.log' for more details." >&2;}
+-   { (exit 1); exit 1; }; }
++  ac_64bit_type="<none>"
+ else
+   cat >conftest.$ac_ext <<_ACEOF
+ /* confdefs.h.  */
+diff -ruN t1lib-5.1.2/configure.in t1lib-5.1.2-new/configure.in
+--- t1lib-5.1.2/configure.in	2007-12-23 16:49:43.000000000 +0100
++++ t1lib-5.1.2-new/configure.in	2015-08-14 10:33:39.805379339 +0200
+@@ -225,14 +225,52 @@
+ dnl **** Check which ANSI integer type is 64 bit
+-AC_CACHE_CHECK( "which ANSI integer type is 64 bit", ac_64bit_type,
+-		AC_TRY_RUN([
++echo $ECHO_N "checking \"which ANSI integer type is 64 bit\"... $ECHO_C" >&6
++if test "${ac_64bit_type+set}" = set; then
++  echo $ECHO_N "(cached) $ECHO_C" >&6
++else
++  if test "$cross_compiling" = yes; then
++  ac_64bit_type="<none>"
++else
++  cat >conftest.$ac_ext <<_ACEOF
++/* confdefs.h.  */
++_ACEOF
++cat confdefs.h >>conftest.$ac_ext
++cat >>conftest.$ac_ext <<_ACEOF
++/* end confdefs.h.  */
++
+ int main(void) {
+   if (sizeof(long)==8)
+     return(0);
+   else
+     return(1);
+-}], ac_64bit_type="long", ac_64bit_type="<none>"))
++}
++_ACEOF
++rm -f conftest$ac_exeext
++if { (eval echo "$as_me:$LINENO: \"$ac_link\"") >&5
++  (eval $ac_link) 2>&5
++  ac_status=$?
++  echo "$as_me:$LINENO: \$? = $ac_status" >&5
++  (exit $ac_status); } && { ac_try='./conftest$ac_exeext'
++  { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
++  (eval $ac_try) 2>&5
++  ac_status=$?
++  echo "$as_me:$LINENO: \$? = $ac_status" >&5
++  (exit $ac_status); }; }; then
++  ac_64bit_type="long"
++else
++  echo "$as_me: program exited with status $ac_status" >&5
++echo "$as_me: failed program was:" >&5
++sed 's/^/| /' conftest.$ac_ext >&5
++
++( exit $ac_status )
++ac_64bit_type="<none>"
++fi
++rm -f core *.core gmon.out bb.out conftest$ac_exeext conftest.$ac_objext conftest.$ac_ext
++fi
++fi
++echo "$as_me:$LINENO: result: $ac_64bit_type" >&5
++echo "${ECHO_T}$ac_64bit_type" >&6
+ if test "$ac_64bit_type" = "long"
+ then
+   T1_AA_TYPE64="-DT1_AA_TYPE64=long"
